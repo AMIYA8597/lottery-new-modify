@@ -27,6 +27,43 @@
 .App-link {
   color: #61dafb;
 }
+.li {
+  margin: 10px;
+}
+
+.winnerBtn {
+  background-color: rgb(152, 116, 116);
+}
+
+.winner {
+  
+}
+
+nav {
+  background-color: #bdb6b6;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+nav li {
+  float: left;
+}
+.button {
+  background-color: ivory;
+}
+
+.routes {
+  margin: 20px;
+  padding: 20px;
+}
+.user {
+  background-color: #61dafb;
+}
 
 @keyframes App-logo-spin {
   from {
