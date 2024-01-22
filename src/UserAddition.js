@@ -1,63 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { Web3 } from 'web3';
-// import { ethers } from "ethers";
+import Web3 from 'web3';
 
-function UserAdd ({userWallet}) {
+function UserAdd() {
+  const [user, setUser] = useState(null);
+  const [web3, setWeb3] = useState(null);
+  const [connected, setConnected] = useState(false);
 
-    //usestate is a state variable that declare under the function
-    const [user , setUser] = useState([]);
-    const [connect , setConnect] = useState("")
+  // Define the function to connect with Metamask outside useEffect
+  const connectWithMetamask = async () => {
+    try {
+      if (window.ethereum) {
+        const web3Instance = new Web3(window.ethereum);
+        setWeb3(web3Instance);
 
-    useEffect( () => {
-        //this is a predefined hooks that handles the effect of an dependency array . 
-        //It is called everyTime whenever any state in the dependency array is modified or updated
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-        const connection = createConnection(user , userWallet);
+        const userObject = {
+          address: accounts[0],
+        };
 
-        // const initialValue = async () => {
+        setUser(userObject);
+        setConnected(true);
+      } else {
+        console.error("Metamask not detected");
+      }
+    } catch (error) {
+      console.error("Error connecting:", error);
+      // Handle error, maybe show a message to the user
+    }
+  };
 
-        // }
+  useEffect(() => {
+    // Call the function within useEffect
+    connectWithMetamask();
+  }, []); // Empty dependency array to run the effect only once when the component mounts
 
+  const handleLiveContest = () => {
+    console.log("Participating in the lottery contest");
+    // Handle logic for participating in the lottery contest
+    // You can navigate to another page, show a modal, etc.
+  };
 
-        // const initializeContract = async () => {
-        //     try {
-        //         await window.ethereum.enable();
-        //         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        //         const signer = provider.getSigner();
-        //         const contractIns = new ethers.Contract(constants.contractAddress, constants.contractAbi, signer);
-        //         setContractInstance(contractIns);
-
-        //         const isComplete = await contractIns.isComplete();
-        //         setStatus(isComplete);
-
-        //         const currentWinner = await contractIns.getWinner();
-        //         setWinner(currentWinner);
-
-        //         const managerAddress = await contractIns.getManager();
-        //         setOwner(managerAddress);
-
-        //         setIsOwnerConnected(managerAddress === currentAccount);
-        //     } catch (err) {
-        //         console.error(err);
-        //     }
-        // };
-    })
-    
-    return (
-        <div className="user">
-            <p className="userp">
-                welcome User 
-            </p>
-            <p>connect with your metamask button</p>
-        <button>connect</button>
-            <p className="userp"> 
-                please enter the button , so you can participate our lottery contest
-            </p>
-            <button className="button">
-                liveContest
-            </button>
+  return (
+    <div className="user">
+      <p className="userp">Welcome {connected && user ? user.address : "User"}</p>
+      {!connected && (
+        <div>
+          <p>Connect with your Metamask button</p>
+          <button onClick={connectWithMetamask}>Connect</button>
         </div>
-    )
+      )}
+      {connected && (
+        <div>
+          <p>Please enter the button so you can participate in our lottery contest</p>
+          <button className="button" onClick={handleLiveContest}>
+            Live Contest
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default UserAdd;
@@ -67,22 +69,64 @@ export default UserAdd;
 
 
 
-// function UserAdd() {
-//     const [click, setClick] = useState(0);
-//     // using array destructuring here 
-//     // to assign initial value 0
-//     // to click and a reference to the function 
-//     // that updates click to setClick
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { Web3 } from 'web3';
+// // import { ethers } from "ethers";
+
+// function UserAdd () {
+
+//     //usestate is a state variable that declare under the function
+//     const [user , setUser] = useState([]);
+//     const [connect , setConnect] = useState("")
+
+//     useEffect( () => {
+//         //this is a predefined hooks that handles the effect of an dependency array . 
+//         //It is called everyTime whenever any state in the dependency array is modified or update
+
+
+
+   
+//     })
+    
 //     return (
-//         <div>
-//             <p>You clicked {click} times</p>
- 
-//             <button onClick={() => setClick(click + 1)}>
-//                 Click me
+//         <div className="user">
+//             <p className="userp">
+//                 welcome User 
+//             </p>
+//             <p>connect with your metamask button</p>
+//         <button>connect</button>
+//             <p className="userp"> 
+//                 please enter the button , so you can participate our lottery contest
+//             </p>
+//             <button className="button">
+//                 liveContest
 //             </button>
 //         </div>
-//     );
+//     )
 // }
- 
- 
+
 // export default UserAdd;
+
+
