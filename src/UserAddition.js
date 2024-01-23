@@ -112,6 +112,118 @@ export default UserAdd;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { Link } from "react-router-dom";
+// import { ethers } from "ethers";
+
+// function UserAdd() {
+//   const [user, setUser] = useState(null);
+//   const [connected, setConnected] = useState(false);
+//   const [amountDed, setAmountDed] = useState(false);
+//   const [account, setAccount] = useState(null);
+//   const [provider, setProvider] = useState(null);
+
+//   const initiateWalletConnection = async () => {
+//     try {
+//       if (window.ethereum) {
+//         await window.ethereum.request({ method: "eth_requestAccounts" });
+//         const provider = new ethers.providers.Web3Provider(window.ethereum);
+//         const signer = provider.getSigner();
+//         const address = await signer.getAddress();
+//         setProvider(provider);
+//         setAccount(address);
+//         setConnected(true);
+//       } else {
+//         console.error("Metamask not detected");
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   const enterLottery = async () => {
+//     // Perform actions related to entering the lottery
+//     setAmountDed(true);
+//   };
+
+//   const disconnectFromMetamask = () => {
+//     setProvider(null);
+//     setAccount(null);
+//     setConnected(false);
+//   };
+
+//   useEffect(() => {
+//     initiateWalletConnection();
+//   }, []);
+
+//   return (
+//     <div className="user">
+//       <p>Welcome {connected && account ? account : "User"}</p>
+//       {!connected && (
+//         <div>
+//           <p>Connect with your MetaMask account</p>
+//           <button onClick={initiateWalletConnection}>Connect</button>
+//         </div>
+//       )}
+//       {connected && (
+//         <div>
+//           <p>Now please enter the amount through MetaMask for lottery participation</p>
+//           <button className="button" onClick={enterLottery}>
+//             Enter Amount
+//           </button>
+
+//           {amountDed && connected && (
+//             <>
+//               <p>Now go to the winner page to see if you are the winner or not</p>
+//               <Link to="/winner">
+//                 <button className="button">Contest Result</button>
+//               </Link>
+//             </>
+//           )}
+
+//           <p>Disconnect from MetaMask</p>
+//           <button onClick={disconnectFromMetamask}>Disconnect</button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default UserAdd;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const contract = async () => {
 //     // const provider = new ethers.providers.Web3Provider(window.ethereum);
 //     // const signer = provider.getSigner();
