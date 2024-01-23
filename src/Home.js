@@ -1,10 +1,19 @@
+
+import React, { useState, useEffect } from "react";
+
+import { Link} from "react-router-dom";
+
 function Home () {
 
     return (
         <>
         <p>
-            Welcome to our Lottery Decentralized Application , Please go to user Section
+            Welcome to our Lottery Decentralized Application , Please go to user contest Section
         </p>
+
+             <Link to="/user">
+              <button className="button">Contest</button>
+            </Link>
 
       
 
