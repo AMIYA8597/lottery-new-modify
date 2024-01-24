@@ -138,3 +138,5 @@ const contractAbi = [
 		"type": "function"
 	}
 ];
+
+export default {contractAddress , contractAbi}

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
 import constants from "./constant.js";
-const ethers = require("ethers")
+
+// const constants = require("./constant.js");
+const ethers = require("ethers");
 // import { ethers } from "ethers"; // interacting with wallet
 function UserAdd() {
   const [user, setUser] = useState(null);
@@ -16,18 +18,6 @@ function UserAdd() {
   // const [status, setStatus] = useState(null);
   // const [winner, setWinner] = useState(null);
   // const [currentAccount, setCurrentAccount] = useState(null);
-
-  // const initiateWalletConnection = async () => {
-  //   try {
-  //     const provider = new ethers.BrowserProvider(window.ethereum);
-  //     const accounts = await provider.send("eth_requestAccounts", []);
-  //     const account = accounts[0];
-  //     setProvider(provider);
-  //     setAccount(account);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const connectWithMetamask = async () => {
     try {
@@ -53,34 +43,41 @@ function UserAdd() {
     }
   };
 
-  const participate = async () => {
+  const participate = () => {
     console.log("participate with lottery");
     // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const provider = new ethers.BrowserProvider(window.ethereum)
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    console.log("provider", provider);
 
     const signer = provider.getSigner();
-    const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer
-    // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider
-    );
-    setContractInstance(contractIns);
+    console.log("signer is" , signer);
+    console.log("ADDRESS",constants.contractAddress)
+    console.log("ABI",constants.contractAbi)
+    const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer);
+      // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider);
+    console.log("contract instance",contractIns);
+    // setContractInstance(contractIns);
+
+    
   };
 
- 
-
   const enterLottery = async () => {
-    const sendingAmount = ethers.parseEther('0.0001');
-    const txn = await contractInstance.enter({value: sendingAmount});
-    await txn.wait();
+    const sendingAmount = ethers.parseEther("0.0001");
+    console.log("hiubhjb",contractInstance);
+    if (contractInstance) {
+      const txn = await contractInstance.enter({ value: sendingAmount });
+      await txn.wait();
+    }
     // setConnected(true);
     // setAmountDed(true);
-  }
+  };
 
-    // const claimPrize = async () => {
-    //     const txn = await contractInstance.claimPrize();
-    //     await txn.wait();
-    // }
+  // const claimPrize = async () => {
+  //     const txn = await contractInstance.claimPrize();
+  //     await txn.wait();
+  // }
 
-     // const entryLottery = async () => {
+  // const entryLottery = async () => {
   //   setConnected(true);
   //   setAmountDed(true);
   // };
@@ -91,10 +88,9 @@ function UserAdd() {
     setConnected(false);
   };
 
-
-
   useEffect(() => {
     connectWithMetamask();
+    // enterLottery();
     // participate();
     // initiateWalletConnection();
     // contractConnect();
@@ -111,18 +107,22 @@ function UserAdd() {
         </div>
       )}
 
-      {connected && (
+      {connected  &&(
         <div>
           <p>
             Now please enter the amount through Metamask for lottery
             participation
           </p>
           {/* <button className="button" onClick={enterLottery}> */}
-          <button className="button" onClick={enterLottery}>
-            Enter Amount
-          </button>
 
-          {amountDed && connected &&  (
+          <button className="button" onClick={participate}>
+            participate
+          </button>
+          {/* <button className="button" onClick={enterLottery}>
+            Enter Amount
+          </button> */}
+
+          {amountDed && connected && (
             <>
               <p>
                 Now go to the winner page to see if you are the winner or not
