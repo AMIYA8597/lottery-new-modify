@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
-import constants from "./constant.js";
+import {contractAddress , contractAbi} from "./constant.js";
 const ethers = require("ethers")
 // import { ethers } from "ethers"; // interacting with wallet
 function UserAdd() {
@@ -59,7 +59,7 @@ function UserAdd() {
     const provider = new ethers.BrowserProvider(window.ethereum)
 
     const signer = provider.getSigner();
-    const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer
+    const contractIns = new ethers.Contract(contractAddress,contractAbi,signer
     // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider
     );
     setContractInstance(contractIns);
