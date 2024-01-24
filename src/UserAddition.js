@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"
-import Web3 from 'web3';
-import constant from "./constant.js"
+import { Link } from "react-router-dom";
+import Web3 from "web3";
+import constants from "./constant.js";
 const ethers = require("ethers")
-// import { ethers } from "ethers";
-
+// import { ethers } from "ethers"; // interacting with wallet
 function UserAdd() {
   const [user, setUser] = useState(null);
   const [web3, setWeb3] = useState(null);
@@ -12,18 +11,23 @@ function UserAdd() {
   const [amountDed, setAmountDed] = useState(false);
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [contractInstance, setContractInstance] = useState(null);
 
-const initiateWalletConnection = async () => {
-    try {
-        const provider = new ethers.BrowserProvider(window.ethereum)
-        const accounts = await provider.send("eth_requestAccounts", []);
-        const account = accounts[0];
-        setProvider(provider);
-        setAccount(account);
-    } catch (error) {
-        console.log(error);
-    }
-};
+  // const [status, setStatus] = useState(null);
+  // const [winner, setWinner] = useState(null);
+  // const [currentAccount, setCurrentAccount] = useState(null);
+
+  // const initiateWalletConnection = async () => {
+  //   try {
+  //     const provider = new ethers.BrowserProvider(window.ethereum);
+  //     const accounts = await provider.send("eth_requestAccounts", []);
+  //     const account = accounts[0];
+  //     setProvider(provider);
+  //     setAccount(account);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const connectWithMetamask = async () => {
     try {
@@ -31,7 +35,9 @@ const initiateWalletConnection = async () => {
         const web3Ins = new Web3(window.ethereum);
         setWeb3(web3Ins);
 
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
 
         const userObject = {
           address: accounts[0],
@@ -39,7 +45,6 @@ const initiateWalletConnection = async () => {
 
         setUser(userObject);
         setConnected(true);
-
       } else {
         console.error("Metamask not detected");
       }
@@ -48,12 +53,37 @@ const initiateWalletConnection = async () => {
     }
   };
 
+  const participate = async () => {
+    console.log("participate with lottery");
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.BrowserProvider(window.ethereum)
 
+    const signer = provider.getSigner();
+    const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer
+    // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider
+    );
+    setContractInstance(contractIns);
+  };
+
+ 
 
   const enterLottery = async () => {
-      setConnected(true);
-      setAmountDed(true);
+    const sendingAmount = ethers.parseEther('0.0001');
+    const txn = await contractInstance.enter({value: sendingAmount});
+    await txn.wait();
+    // setConnected(true);
+    // setAmountDed(true);
   }
+
+    // const claimPrize = async () => {
+    //     const txn = await contractInstance.claimPrize();
+    //     await txn.wait();
+    // }
+
+     // const entryLottery = async () => {
+  //   setConnected(true);
+  //   setAmountDed(true);
+  // };
 
   const disconnectFromMetamask = () => {
     setWeb3(null);
@@ -61,11 +91,14 @@ const initiateWalletConnection = async () => {
     setConnected(false);
   };
 
- 
+
 
   useEffect(() => {
     connectWithMetamask();
-    initiateWalletConnection()
+    // participate();
+    // initiateWalletConnection();
+    // contractConnect();
+    // loadBlockchainData()
   }, []);
 
   return (
@@ -77,18 +110,27 @@ const initiateWalletConnection = async () => {
           <button onClick={connectWithMetamask}>Connect</button>
         </div>
       )}
+
       {connected && (
         <div>
-          <p>Now please enter the amount through Metamask for lottery participation</p>
-          <button className="button" onClick={enterLottery}>Enter Amount</button>
+          <p>
+            Now please enter the amount through Metamask for lottery
+            participation
+          </p>
+          {/* <button className="button" onClick={enterLottery}> */}
+          <button className="button" onClick={enterLottery}>
+            Enter Amount
+          </button>
 
-          {amountDed && connected && (
-              <>
-               <p>Now go to the winner page to see if you are the winner or not</p>
-               <Link to="/winner">
-                 <button className="button">Contest Result</button>
+          {amountDed && connected &&  (
+            <>
+              <p>
+                Now go to the winner page to see if you are the winner or not
+              </p>
+              <Link to="/winner">
+                <button className="button">Contest Result</button>
               </Link>
-             </>
+            </>
           )}
 
           <p>Disconnect from Metamask</p>
@@ -101,30 +143,183 @@ const initiateWalletConnection = async () => {
 
 export default UserAdd;
 
+// import React, {useState, useEffect} from "react";
+// import { ethers } from "ethers";
+// import Web3 from 'web3';
+// import constants from './constant';
 
+// function UserAdd () {
+//   const [currentAccount, setCurrentAccount] = useState("");
+//   const [contractInstance, setcontractInstance] = useState('');
+//   const [status, setStatus] = useState(false);
+//   const [isWinner, setIsWinner] = useState('');
 
+//   useEffect(() => {
+//       const loadBlockchainData = async () => {
+//           if (typeof window.ethereum !== 'undefined') {
+//               const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
 
+//               // const provider = new ethers.providers.Web3Provider(Web3.currentProvider);
+//               // const signer = provider.getSigner();
+//               try {
+//                   const signer = provider.getSigner();
+//                   const address = await signer.getAddress();
+//                   console.log(address);
+//                   setCurrentAccount(address);
+//                   window.ethereum.on('accountsChanged', (accounts) => {
+//                       setCurrentAccount(accounts[0]);
+//                       console.log(currentAccount);
+//                   })
+//               } catch (err) {
+//                   console.error(err);
+//               }
+//           } else {
+//               alert('Please install Metamask to use this application')
 
+//           }
+//       };
 
+//       const contract = async () => {
+//           // const provider = new ethers.providers.Web3Provider(window.ethereum);
+//           // const signer = provider.getSigner();
 
+//           await window.ethereum.enable()
+//           // const provider = new ethers.providers.Web3Provider(window.ethereum);
+//           const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
 
+//           const signer = provider.getSigner();
+//           const contractIns = new ethers.Contract(constants.contractAddress, constants.contractAbi, signer);
+//           setcontractInstance(contractIns);
+//           const status = await contractInstance.isComplete;
+//           setStatus(status);
+//           const winner = await contractInstance.getWinner;
+//           if (winner === currentAccount) {
+//               setIsWinner(true);
+//           } else {
+//               setIsWinner(false);
+//           }
+//       }
 
+//       loadBlockchainData();
+//       contract();
+//   }, [currentAccount]);
 
+//   const enterLottery = async () => {
+//       const amountToSend = ethers.utils.parseEther('0.0001');
+//       const tx = await contractInstance.enter({value: amountToSend,});
+//       await tx.wait();
+//   }
 
+//   const claimPrize = async () => {
+//       const tx = await contractInstance.claimPrize();
+//       await tx.wait();
+//   }
 
+//   return(
+//       <div className="container">
+//           <h1>Lottery Page</h1>
+//           <div className="button-container">
+//               {status ? ( isWinner ? (<button className="enter-button" onClick={claimPrize}> Claim Prize </button>):
+//               (<p>You are not the winner</p>)) :
+//               (<button className="enter-button" onClick={enterLottery}> Enter Lottery </button>)
 
+//               }
+//           </div>
+//       </div>
+//   )
 
+// }
 
+// export default UserAdd;
 
+// import React, {useState, useEffect} from "react";
+// import { ethers } from "ethers";
+// import Web3 from 'web3';
+// import constants from './constant';
 
+// function Home () {
+//     const [currentAccount, setCurrentAccount] = useState("");
+//     const [contractInstance, setcontractInstance] = useState('');
+//     const [status, setStatus] = useState(false);
+//     const [isWinner, setIsWinner] = useState('');
 
+//     useEffect(() => {
+//         const loadBlockchainData = async () => {
+//             if (typeof window.ethereum !== 'undefined') {
+//                 const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
 
+//                 // const provider = new ethers.providers.Web3Provider(Web3.currentProvider);
+//                 // const signer = provider.getSigner();
+//                 try {
+//                     const signer = provider.getSigner();
+//                     const address = await signer.getAddress();
+//                     console.log(address);
+//                     setCurrentAccount(address);
+//                     window.ethereum.on('accountsChanged', (accounts) => {
+//                         setCurrentAccount(accounts[0]);
+//                         console.log(currentAccount);
+//                     })
+//                 } catch (err) {
+//                     console.error(err);
+//                 }
+//             } else {
+//                 alert('Please install Metamask to use this application')
 
+//             }
+//         };
 
+//         const contract = async () => {
+//             // const provider = new ethers.providers.Web3Provider(window.ethereum);
+//             // const signer = provider.getSigner();
 
+//             await window.ethereum.enable()
+//             // const provider = new ethers.providers.Web3Provider(window.ethereum);
+//             const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
 
+//             const signer = provider.getSigner();
+//             const contractIns = new ethers.Contract(constants.contractAddress, constants.contractAbi, signer);
+//             setcontractInstance(contractIns);
+//             const status = await contractInstance.isComplete;
+//             setStatus(status);
+//             const winner = await contractInstance.getWinner;
+//             if (winner === currentAccount) {
+//                 setIsWinner(true);
+//             } else {
+//                 setIsWinner(false);
+//             }
+//         }
 
+//         loadBlockchainData();
+//         contract();
+//     }, [currentAccount]);
 
+//     const enterLottery = async () => {
+//         const amountToSend = ethers.utils.parseEther('0.0001');
+//         const tx = await contractInstance.enter({value: amountToSend,});
+//         await tx.wait();
+//     }
+
+//     const claimPrize = async () => {
+//         const tx = await contractInstance.claimPrize();
+//         await tx.wait();
+//     }
+
+//     return(
+//         <div className="container">
+//             <h1>Lottery Page</h1>
+//             <div className="button-container">
+//                 {status ? ( isWinner ? (<button className="enter-button" onClick={claimPrize}> Claim Prize </button>):
+//                 (<p>You are not the winner</p>)) :
+//                 (<button className="enter-button" onClick={enterLottery}> Enter Lottery </button>)
+
+//                 }
+//             </div>
+//         </div>
+//     )
+
+// }
+
+// export default Home;
 
 // import React, { useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
@@ -205,25 +400,6 @@ export default UserAdd;
 
 // export default UserAdd;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // const contract = async () => {
 //     // const provider = new ethers.providers.Web3Provider(window.ethereum);
 //     // const signer = provider.getSigner();
@@ -244,18 +420,6 @@ export default UserAdd;
 //         setIsWinner(false);
 //     }
 // }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import constant from "./constant.js";
@@ -282,7 +446,6 @@ export default UserAdd;
 //         setUser(userObject);
 //         setConnected(true);
 
-        
 //       } else {
 //         console.error("Metamask not detected");
 //       }
@@ -329,7 +492,7 @@ export default UserAdd;
 //         <div>
 //           <p>Now please enter the amount through Metamask for lottery participation</p>
 //           <button className="button">Enter Amount</button>
-          
+
 //           {/* Conditionally render based on some condition */}
 
 //           {/* {  user && user.address && dedaction && (
@@ -340,7 +503,7 @@ export default UserAdd;
 //               </Link>
 //             </>
 //           )} */}
-          
+
 //           <p>Disconnect from Metamask</p>
 //           <button onClick={disconnectFromMetamask}>Disconnect</button>
 //         </div>
@@ -350,32 +513,6 @@ export default UserAdd;
 // }
 
 // export default UserAdd;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from "react";
 // import { BrowserRouter as Router, Link, Route } from "react-router-dom";
@@ -448,44 +585,6 @@ export default UserAdd;
 
 // export default UserAdd;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import React, { useState, useEffect } from "react";
 // // import { Web3 } from 'web3';
 // // // import { ethers } from "ethers";
@@ -497,22 +596,19 @@ export default UserAdd;
 // //     const [connect , setConnect] = useState("")
 
 // //     useEffect( () => {
-// //         //this is a predefined hooks that handles the effect of an dependency array . 
+// //         //this is a predefined hooks that handles the effect of an dependency array .
 // //         //It is called everyTime whenever any state in the dependency array is modified or update
 
-
-
-   
 // //     })
-    
+
 // //     return (
 // //         <div className="user">
 // //             <p className="userp">
-// //                 welcome User 
+// //                 welcome User
 // //             </p>
 // //             <p>connect with your metamask button</p>
 // //         <button>connect</button>
-// //             <p className="userp"> 
+// //             <p className="userp">
 // //                 please enter the button , so you can participate our lottery contest
 // //             </p>
 // //             <button className="button">
@@ -523,5 +619,3 @@ export default UserAdd;
 // // }
 
 // // export default UserAdd;
-
-

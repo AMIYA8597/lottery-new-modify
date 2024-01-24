@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Home from "./Home.js"
 import UserAdd from "./UserAddition.js"
+import OtherOne from "./otherOne.js"
 import WinnerAdd from "./WinnerAddition.js";
 import ComponentIncrease from "./AddCounts.js"
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
@@ -26,6 +27,9 @@ function App() {
             <li className='li'>
               <Link to="/component">ComponentIncrease</Link>
             </li>
+            <li className='li'>
+              <Link to="/diffConnect">OtherOne</Link>
+            </li>
           </ul>
         </nav>
 
@@ -34,6 +38,7 @@ function App() {
           <Route path="/user" element={<UserAdd />}></Route>
           <Route path="/winner" element={<WinnerAdd />}></Route>
           <Route path="/component" element={<ComponentIncrease />}></Route>
+          <Route path="/diffConnect" element={<OtherOne />}></Route>
         </Routes>
       </BrowserRouter>
 
