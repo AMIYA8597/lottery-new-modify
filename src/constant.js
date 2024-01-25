@@ -1,6 +1,6 @@
-const contractAddress = "0x9f0e7fCe93DD83B7604729BDd1c9528eb81E403a";
+ export const contractAddress = "0x9f0e7fCe93DD83B7604729BDd1c9528eb81E403a";
 
-const contractAbi = [
+export const contractAbi = [
 	{
 		"inputs": [],
 		"name": "claimPrice",
@@ -138,5 +138,3 @@ const contractAbi = [
 		"type": "function"
 	}
 ];
-
-export default {contractAddress , contractAbi}
