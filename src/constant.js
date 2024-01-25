@@ -1,23 +1,9 @@
- export const contractAddress = "0x9f0e7fCe93DD83B7604729BDd1c9528eb81E403a";
+ export const contractAddress = "0xBc4674BfBF0731109c3F43c2bE84d661B3400C55";
 
 export const contractAbi = [
 	{
 		"inputs": [],
-		"name": "claimPrice",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "enter",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "pickWinner",
+		"name": "PickWinner",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -28,13 +14,17 @@ export const contractAbi = [
 		"type": "constructor"
 	},
 	{
+		"stateMutability": "payable",
+		"type": "receive"
+	},
+	{
 		"inputs": [],
-		"name": "claimed",
+		"name": "GetBalance",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "uint256",
 				"name": "",
-				"type": "bool"
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -42,20 +32,7 @@ export const contractAbi = [
 	},
 	{
 		"inputs": [],
-		"name": "getManager",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getPlayers",
+		"name": "GetPlayers",
 		"outputs": [
 			{
 				"internalType": "address payable[]",
@@ -68,33 +45,7 @@ export const contractAbi = [
 	},
 	{
 		"inputs": [],
-		"name": "getWinner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "isComplete",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "manager",
+		"name": "Manager",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -113,7 +64,7 @@ export const contractAbi = [
 				"type": "uint256"
 			}
 		],
-		"name": "players",
+		"name": "Players",
 		"outputs": [
 			{
 				"internalType": "address payable",
@@ -126,12 +77,12 @@ export const contractAbi = [
 	},
 	{
 		"inputs": [],
-		"name": "status",
+		"name": "Winner",
 		"outputs": [
 			{
-				"internalType": "bool",
+				"internalType": "address payable",
 				"name": "",
-				"type": "bool"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",

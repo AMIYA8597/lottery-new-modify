@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
-import constants from "./constant.js";
+import {contractAddress , contractAbi} from "./constant.js";
 const ethers = require("ethers")
+// import { BigNumb er } from "ethers";
 // import { ethers } from "ethers"; // interacting with wallet
 function UserAdd() {
   const [user, setUser] = useState(null);
@@ -12,10 +13,6 @@ function UserAdd() {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [contractInstance, setContractInstance] = useState(null);
-
-  // const [status, setStatus] = useState(null);
-  // const [winner, setWinner] = useState(null);
-  // const [currentAccount, setCurrentAccount] = useState(null);
 
   const connectWithMetamask = async () => {
     try {
@@ -41,36 +38,135 @@ function UserAdd() {
     }
   };
 
-  const participate = () => {
-    console.log("participate with lottery");
+  const participate = async () => {
+    // console.log("participate with lottery");
     // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    console.log("provider", provider);
+    const provider = new ethers.BrowserProvider(window.ethereum)
+    // console.log("Create a provider using ethers.BrowserProvider with MetaMask's Ethereum provider" , provider);
 
     const signer = provider.getSigner();
-    const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer
-    // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider
-    );
+    const contractIns = new ethers.Contract(contractAddress,contractAbi,signer);
+    // console.log("Create an instance of the Ethereum smart contract using its address and ABI");
+    // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider );
     setContractInstance(contractIns);
   };
+  useEffect(() => {
+    participate()
+  }, [])
+  
 
   const enterLottery = async () => {
-    const sendingAmount = ethers.parseEther("0.0001");
-    console.log("hiubhjb",contractInstance);
-    if (contractInstance) {
-      const txn = await contractInstance.enter({ value: sendingAmount });
-      await txn.wait();
+    console.log("contract instance is",contractInstance);
+    console.log("entry lottery");
+    try {
+        if (window.ethereum) {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const sendingAmount = ethers.parseEther('0.0001');
+            // const sendingAmount = ethers.parseWei('100000000000000');
+            console.log("sendingAmount", sendingAmount);
+            const transactionParameters = {
+                to: contractInstance.target, 
+                from: window.ethereum.selectedAddress, 
+                value: sendingAmount.toString(),
+              };
+            console.log("transaction started" , transactionParameters);
+
+            const txn = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [transactionParameters],
+            });
+            console.log("txn complete" , txn);
+        
+            // Wait for the transaction to be mined and confirmed
+            // await contractInstance.provider.waitForTransaction(txn);
+
+            // Additional actions can be added here based on the success of the transaction
+            // For example, setting flags like setConnected(true) or setAmountDed(true)
+            setConnected(true);
+            setAmountDed(true)
+        } else {
+            console.error('MetaMask not detected. Please install MetaMask extension.');
+        }
+    } catch (error) {
+        console.error('Error during transaction:', error);
+        // Handle errors as needed
     }
-    // setConnected(true);
-    // setAmountDed(true);
-  };
+};
 
-  // const claimPrize = async () => {
-  //     const txn = await contractInstance.claimPrize();
-  //     await txn.wait();
-  // }
+// const enterLottery = async () => {
+//   console.log("contract instance is", contractInstance);
+//   console.log("entry lottery");
+//   try {
+//       if (window.ethereum) {
+//           await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-  // const entryLottery = async () => {
+//           // Check if selectedAddress is defined
+//           if (!window.ethereum.selectedAddress) {
+//               console.error('Selected address is not available. Please check your MetaMask setup.');
+//               return;
+//           }
+
+//           // Specify value in wei
+//           const sendingAmountInWei = ethers.BigNumber.from('100000000000000'); // 0.0001 ETH in wei
+//           console.log("sendingAmountInWei", sendingAmountInWei);
+//           const transactionParameters = {
+//               to: contractInstance.target,
+//               from: window.ethereum.selectedAddress,
+//               value: sendingAmountInWei.toString(),
+//           };
+//           console.log("transaction started", transactionParameters);
+
+//           const txnHash = await window.ethereum.request({
+//               method: 'eth_sendTransaction',
+//               params: [transactionParameters],
+//           });
+//           console.log("txnHash", txnHash);
+
+//           // Wait for the transaction to be mined and confirmed
+//           await waitForTransactionConfirmation(txnHash);
+
+//           // Additional actions can be added here based on the success of the transaction
+//           // For example, setting flags like setConnected(true) or setAmountDed(true)
+//           setConnected(true);
+//           setAmountDed(true);
+//       } else {
+//           console.error('MetaMask not detected. Please install MetaMask extension.');
+//       }
+//   } catch (error) {
+//       console.error('Error during transaction:', error);
+//       // Handle errors as needed
+//   }
+// };
+
+
+// async function waitForTransactionConfirmation(txnHash) {
+//   return new Promise((resolve, reject) => {
+//       const intervalId = setInterval(async () => {
+//           try {
+//               const receipt = await window.ethereum.request({
+//                   method: 'eth_getTransactionReceipt',
+//                   params: [txnHash],
+//               });
+
+//               if (receipt && receipt.blockNumber) {
+//                   clearInterval(intervalId);
+//                   resolve(receipt);
+//               }
+//           } catch (error) {
+//               clearInterval(intervalId);
+//               reject(error);
+//           }
+//       }, 3000); // Check every 3 seconds
+//   });
+// }
+
+
+    // const claimPrize = async () => {
+    //     const txn = await contractInstance.claimPrize();
+    //     await txn.wait();
+    // }
+
+     // const entryLottery = async () => {
   //   setConnected(true);
   //   setAmountDed(true);
   // };
@@ -81,9 +177,10 @@ function UserAdd() {
     setConnected(false);
   };
 
+
+
   useEffect(() => {
     connectWithMetamask();
-    // enterLottery();
     // participate();
     // initiateWalletConnection();
     // contractConnect();
@@ -100,22 +197,18 @@ function UserAdd() {
         </div>
       )}
 
-      {connected  &&(
+      {connected && (
         <div>
           <p>
             Now please enter the amount through Metamask for lottery
             participation
           </p>
           {/* <button className="button" onClick={enterLottery}> */}
-
-          <button className="button" onClick={participate}>
-            participate
-          </button>
-          {/* <button className="button" onClick={enterLottery}>
+          <button className="button" onClick={enterLottery}>
             Enter Amount
-          </button> */}
+          </button>
 
-          {amountDed && connected && (
+          {amountDed && connected &&  (
             <>
               <p>
                 Now go to the winner page to see if you are the winner or not
@@ -144,10 +237,35 @@ export default UserAdd;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import React, { useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
 // import Web3 from "web3";
-// import {contractAddress , contractAbi} from "./constant.js";
+// import constants from "./constant.js";
 // const ethers = require("ethers")
 // // import { ethers } from "ethers"; // interacting with wallet
 // function UserAdd() {
@@ -162,18 +280,6 @@ export default UserAdd;
 //   // const [status, setStatus] = useState(null);
 //   // const [winner, setWinner] = useState(null);
 //   // const [currentAccount, setCurrentAccount] = useState(null);
-
-//   // const initiateWalletConnection = async () => {
-//   //   try {
-//   //     const provider = new ethers.BrowserProvider(window.ethereum);
-//   //     const accounts = await provider.send("eth_requestAccounts", []);
-//   //     const account = accounts[0];
-//   //     setProvider(provider);
-//   //     setAccount(account);
-//   //   } catch (error) {
-//   //     console.log(error);
-//   //   }
-//   // };
 
 //   const connectWithMetamask = async () => {
 //     try {
@@ -199,66 +305,36 @@ export default UserAdd;
 //     }
 //   };
 
-//   const participate = async () => {
+//   const participate = () => {
 //     console.log("participate with lottery");
 //     // const provider = new ethers.providers.Web3Provider(window.ethereum);
-//     const provider = new ethers.BrowserProvider(window.ethereum)
+//     const provider = new ethers.BrowserProvider(window.ethereum);
+//     console.log("provider", provider);
 
 //     const signer = provider.getSigner();
-//     const contractIns = new ethers.Contract(contractAddress,contractAbi,signer
+//     const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,signer
 //     // const contractIns = new ethers.Contract(constants.contractAddress,constants.contractAbi,provider
 //     );
 //     setContractInstance(contractIns);
 //   };
-//   useEffect(() => {
-//     participate()
-//   }, [])
-  
-
- 
 
 //   const enterLottery = async () => {
-//     try {
-//         // Check if MetaMask is installed
-//         if (window.ethereum) {
-//             // Request access to the user's MetaMask account
-//             await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-//             // Now that we have access, proceed with the transaction
-//             const sendingAmount = ethers.parseEther('0.0001');
-//             const transactionParameters = {
-//                 to: contractInstance.target, // Replace with your contract address
-//                 from: window.ethereum.selectedAddress, // Sender's MetaMask address
-//                 value: sendingAmount.toString(),
-//             };
-
-//             // Send the transaction
-//             const txn = await window.ethereum.request({
-//                 method: 'eth_sendTransaction',
-//                 params: [transactionParameters],
-//             });
-
-//             // Wait for the transaction to be mined and confirmed
-//             await contractInstance.provider.waitForTransaction(txn);
-
-//             // Additional actions can be added here based on the success of the transaction
-//             // For example, setting flags like setConnected(true) or setAmountDed(true)
-//         } else {
-//             console.error('MetaMask not detected. Please install MetaMask extension.');
-//         }
-//     } catch (error) {
-//         console.error('Error during transaction:', error);
-//         // Handle errors as needed
+//     const sendingAmount = ethers.parseEther("0.0001");
+//     console.log("hiubhjb",contractInstance);
+//     if (contractInstance) {
+//       const txn = await contractInstance.enter({ value: sendingAmount });
+//       await txn.wait();
 //     }
-// };
+//     // setConnected(true);
+//     // setAmountDed(true);
+//   };
 
+//   // const claimPrize = async () => {
+//   //     const txn = await contractInstance.claimPrize();
+//   //     await txn.wait();
+//   // }
 
-//     // const claimPrize = async () => {
-//     //     const txn = await contractInstance.claimPrize();
-//     //     await txn.wait();
-//     // }
-
-//      // const entryLottery = async () => {
+//   // const entryLottery = async () => {
 //   //   setConnected(true);
 //   //   setAmountDed(true);
 //   // };
@@ -269,10 +345,9 @@ export default UserAdd;
 //     setConnected(false);
 //   };
 
-
-
 //   useEffect(() => {
 //     connectWithMetamask();
+//     // enterLottery();
 //     // participate();
 //     // initiateWalletConnection();
 //     // contractConnect();
@@ -289,18 +364,22 @@ export default UserAdd;
 //         </div>
 //       )}
 
-//       {connected && (
+//       {connected  &&(
 //         <div>
 //           <p>
 //             Now please enter the amount through Metamask for lottery
 //             participation
 //           </p>
 //           {/* <button className="button" onClick={enterLottery}> */}
-//           <button className="button" onClick={enterLottery}>
-//             Enter Amount
-//           </button>
 
-//           {amountDed && connected &&  (
+//           <button className="button" onClick={participate}>
+//             participate
+//           </button>
+//           {/* <button className="button" onClick={enterLottery}>
+//             Enter Amount
+//           </button> */}
+
+//           {amountDed && connected && (
 //             <>
 //               <p>
 //                 Now go to the winner page to see if you are the winner or not
