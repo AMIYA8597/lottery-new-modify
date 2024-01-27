@@ -107,6 +107,8 @@ const LotteryWinner = () => {
     }
   };
 
+  const winnerAddress= localStorage.getItem("userAddress")
+
   return (
     <div className="lottery-winner">
       <h2>Lottery Winner Selection</h2>
@@ -121,7 +123,9 @@ const LotteryWinner = () => {
           <button onClick={pickWinner}>Pick Winner</button>
         </>
       ) : (
-        <p>Loading participants...</p>
+
+        <p> congrate you r the winner  : { winnerAddress } </p>
+        
       )}
 
       {winner && (
