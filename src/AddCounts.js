@@ -1,11 +1,9 @@
-
-
-
-
 import React, { useState} from "react";
 
 function ComponentIncrease () {
     const [count , setCount] = useState(5);
+
+    // let counts = [];
 
     
     const increaseCount = () => {
