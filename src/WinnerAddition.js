@@ -63,7 +63,8 @@ const LotteryWinner = () => {
     const fetchParticipants = async () => {
       try {
         // Replace this with your backend endpoint to fetch participants
-        const response = await fetch("https://fake-backend.example.com/participants");
+        // const response = await fetch("https://fake-backend.example.com/participants");
+        const response = await fetch();
         const data = await response.json();
         setParticipants(data.participants);
       } catch (error) {
@@ -84,7 +85,8 @@ const LotteryWinner = () => {
 
         // Simulate sending a transaction to the smart contract to declare the winner
         // Replace with your actual contract instance and method
-        const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID");
+        // const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID");
+        const provider = new ethers.providers.JsonRpcProvider();
         const signer = provider.getSigner();
 
         // Replace with your actual contract address and ABI
