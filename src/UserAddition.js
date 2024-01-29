@@ -13,6 +13,7 @@ const ethers = require("ethers");
   const [provider, setProvider] = useState(null);
   const [contractInstance, setContractInstance] = useState(null);
   // const  [ userdata , setUserData] = useState();
+  // const [subdivide , setSubdivide] = useState("");
 
   const connectWithMetamask = async () => {
     try {
@@ -56,7 +57,7 @@ const ethers = require("ethers");
    
     // setUserData(userAddressData)
     try {
-      const userAddressData = localStorage.getItem("userAddress");
+      const userAddressData = localStorage.getItem("userAddress"); 
       if (window.ethereum && userAddressData == null) {
         await window.ethereum.request({ method: "eth_requestAccounts" });
         const sendingAmount = ethers.parseEther("0.0001");
