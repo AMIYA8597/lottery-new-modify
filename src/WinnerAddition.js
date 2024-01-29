@@ -4,66 +4,15 @@ import { contractAddress, contractAbi } from "./constant.js";
 const ethers = require("ethers");
 // import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
-// winner.js
-
-// import React, { useState } from "react";
-// import { Link } from "react-router-dom";
-
-// function Winner() {
-//   const [winnerAddress, setWinnerAddress] = useState(null);
-
-//   const selectWinner = () => {
-//     // Assuming you have a list of participant addresses, you can randomly select a winner
-//     const participantAddresses = []; // Add participant addresses here
-
-//     if (participantAddresses.length > 0) {
-//       const randomIndex = Math.floor(Math.random() * participantAddresses.length);
-//       const selectedWinner = participantAddresses[randomIndex];
-//       setWinnerAddress(selectedWinner);
-//     } else {
-//       setWinnerAddress(null);
-//     }
-//   };
-
-//   return (
-//     <div className="winner">
-//       <h2>Winner Page</h2>
-      
-//       <button className="button" onClick={selectWinner}>
-//         Select Winner
-//       </button>
-
-//       {winnerAddress && (
-//         <div>
-//           <p>Winner Address: {winnerAddress}</p>
-//           <p>Congratulations to the winner!</p>
-//         </div>
-//       )}
-
-//       <p>Go back to the user page</p>
-//       <Link to="/">
-//         <button className="button">Back to User Page</button>
-//       </Link>
-//     </div>
-//   );
-// }
-
-// export default Winner;
-
-
-
-
-
 const LotteryWinner = () => {
   const [participants, setParticipants] = useState([]);
   const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    // Simulating fetching participants from the backend
+   
     const fetchParticipants = async () => {
       try {
-        // Replace this with your backend endpoint to fetch participants
-        // const response = await fetch("https://fake-backend.example.com/participants");
+       
         const response = await fetch();
         const data = await response.json();
         setParticipants(data.participants);
@@ -79,29 +28,24 @@ const LotteryWinner = () => {
 
     try {
       if (participants.length > 0) {
-        // Pick a random index as the winner
+       
         const randomIndex = Math.floor(Math.random() * participants.length);
         const selectedWinner = participants[randomIndex];
 
-        // Simulate sending a transaction to the smart contract to declare the winner
-        // Replace with your actual contract instance and method
-        // const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID");
         const provider = new ethers.providers.JsonRpcProvider();
         const signer = provider.getSigner();
 
-        // Replace with your actual contract address and ABI
-        // const contractAddress = "0xYourContractAddress";
-        // const contractAbi = [...]; // Your contract ABI
+        
 
         const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
-        // Replace with your contract method to declare the winner
+        
         const transaction = await contract.declareWinner(selectedWinner);
 
-        // Wait for the transaction to be mined
+        
         await transaction.wait();
 
-        // Update the state with the winner
+        
         setWinner(selectedWinner);
       }
     } catch (error) {
@@ -254,3 +198,115 @@ export default LotteryWinner;
 // // }
 
 // // export default WinnerAdd;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { contractAddress, contractAbi } from "./constant.js";
+// // import { ethers } from "ethers";
+// const ethers = require("ethers");
+// // import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+
+// const LotteryWinner = () => {
+//   const [participants, setParticipants] = useState([]);
+//   const [winner, setWinner] = useState(null);
+
+//   useEffect(() => {
+//     // Simulating fetching participants from the backend
+//     const fetchParticipants = async () => {
+//       try {
+//         // Replace this with your backend endpoint to fetch participants
+//         // const response = await fetch("https://fake-backend.example.com/participants");
+//         const response = await fetch();
+//         const data = await response.json();
+//         setParticipants(data.participants);
+//       } catch (error) {
+//         console.error("Error fetching participants:", error);
+//       }
+//     };
+
+//     fetchParticipants();
+//   }, []);
+
+//   const pickWinner = async () => {
+
+//     try {
+//       if (participants.length > 0) {
+//         // Pick a random index as the winner
+//         const randomIndex = Math.floor(Math.random() * participants.length);
+//         const selectedWinner = participants[randomIndex];
+
+//         // Simulate sending a transaction to the smart contract to declare the winner
+//         // Replace with your actual contract instance and method
+//         // const provider = new ethers.providers.JsonRpcProvider("https://rinkeby.infura.io/v3/YOUR_INFURA_PROJECT_ID");
+//         const provider = new ethers.providers.JsonRpcProvider();
+//         const signer = provider.getSigner();
+
+//         // Replace with your actual contract address and ABI
+//         // const contractAddress = "0xYourContractAddress";
+//         // const contractAbi = [...]; // Your contract ABI
+
+//         const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+//         // Replace with your contract method to declare the winner
+//         const transaction = await contract.declareWinner(selectedWinner);
+
+//         // Wait for the transaction to be mined
+//         await transaction.wait();
+
+//         // Update the state with the winner
+//         setWinner(selectedWinner);
+//       }
+//     } catch (error) {
+//       console.error("Error picking winner:", error);
+//     }
+//   };
+
+//   const winnerAddress= localStorage.getItem("userAddress")
+
+//   return (
+//     <div className="lottery-winner">
+//       <h2>Lottery Winner Selection</h2>
+//       {participants.length > 0 ? (
+//         <>
+//           <p>Participants:</p>
+//           <ul>
+//             {participants.map((participant, index) => (
+//               <li key={index}>{participant}</li>
+//             ))}
+//           </ul>
+//           <button onClick={pickWinner}>Pick Winner</button>
+//         </>
+//       ) : (
+
+//         <p> congrate you r the winner  : { winnerAddress } </p>
+        
+//       )}
+
+//       {winner && (
+//         <div>
+//           <h3>Winner:</h3>
+//           <p>{winner}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default LotteryWinner;
+

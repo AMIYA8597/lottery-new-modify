@@ -1,29 +1,65 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 
-function ComponentIncrease () {
-    const [count , setCount] = useState(5);
+function ComponentIncrease() {
+  const [count, setCount] = useState(0);
 
-    // let counts = [];
+  // let counts = [];
 
-    
-    const increaseCount = () => {
-        setCount(count -1);
-        if (count <=0) {
-            setCount(count +5)
-        }
-    }
+  const increaseCount = () => {
+    setCount(count + 1);
+    // if (count <=0) {
+    //     setCount(count +5)
+    // }
+  };
 
-
-    return ( 
-        <div>
-        <h2>
-            counter : {count}
-        </h2>
-        <button onClick={increaseCount}>
-            clickMe
-        </button>
-        </div>
-    ) 
+  return (
+    <div>
+      <h2>counter : {count}</h2>
+      <button onClick={increaseCount}>clickMe</button>
+    </div>
+  );
 }
 
 export default ComponentIncrease;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState} from "react";
+
+// function ComponentIncrease () {
+//     const [count , setCount] = useState(5);
+
+//     // let counts = [];
+
+//     const increaseCount = () => {
+//         setCount(count -1);
+//         if (count <=0) {
+//             setCount(count +5)
+//         }
+//     }
+
+//     return (
+//         <div>
+//         <h2>
+//             counter : {count}
+//         </h2>
+//         <button onClick={increaseCount}>
+//             clickMe
+//         </button>
+//         </div>
+//     )
+// }
+
+// export default ComponentIncrease;

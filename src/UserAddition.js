@@ -72,7 +72,10 @@ const ethers = require("ethers");
         });
 
         setConnected(true);
+
         setAmountDed(true);
+
+        alert("congratulations you complete your payment !");
 
         navigate("/winner")
 
@@ -82,7 +85,8 @@ const ethers = require("ethers");
         console.error("MetaMask not detected. Please install MetaMask extension.");
       }
     } catch (error) {
-    alert("Something went wrong !");
+    // alert("Something went wrong !");
+    alert("You reject lottery entry Fees !");
           console.error("Error during transaction:", error);
       // Handle errors as needed
     }
@@ -95,7 +99,7 @@ const ethers = require("ethers");
   };
 
   useEffect(() => {
-    // Check if there's a stored user address in local storage and set it in state
+ 
     const storedUserAddress = localStorage.getItem("userAddress");
     if (storedUserAddress) {
       setUser({ address: storedUserAddress });
@@ -125,6 +129,14 @@ const ethers = require("ethers");
           {amountDed && connected && (
             <>
               <p>Now go to the winner page to see if you are the winner or not</p>
+
+
+              {/* <button className="button">Contest Result
+              <Link to="/winner">
+               
+              </Link>
+              </button> */}
+              
               <Link to="/winner">
                 <button className="button">Contest Result</button>
               </Link>
