@@ -110,6 +110,25 @@ const ethers = require("ethers");
     connectWithMetamask();
   }, []);
 
+
+
+
+//   function isPalindrome(s) {
+//     // Convert the string to lowercase and remove non-alphanumeric characters
+//     const cleanString = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+//     // Check if the clean string is equal to its reverse
+//     return cleanString === cleanString.split('').reverse().join('');
+// }
+
+// // Example usage:
+// const string1 = "A man, a plan, a canal, Panama!";
+// console.log(isPalindrome(string1)); // Output: true
+
+// const string2 = "race a car";
+// console.log(isPalindrome(string2)); // Output: false
+
+
   return (
     <div className="user">
       <p>Welcome {connected && user ? user.address : "User"}</p>
